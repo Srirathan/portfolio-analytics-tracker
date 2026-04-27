@@ -1,0 +1,12 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+sqlalchemy>=2.0.0
+pydantic[email]>=2.8.0
+email-validator>=2.0.0
+pydantic-settings>=2.3.0
+python-jose[cryptography]>=3.3.0
+bcrypt>=4.0.0
+python-multipart>=0.0.9
+httpx>=0.27.0
+# PostgreSQL (production): pip install with your stack or uncomment:
+psycopg[binary]>=3.2.0
