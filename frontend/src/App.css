@@ -432,6 +432,43 @@ tbody tr:hover {
   margin: 0;
 }
 
+.field-error {
+  display: block;
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #b91c1c;
+  line-height: 1.35;
+}
+
+input[aria-invalid='true'] {
+  border-color: #f87171;
+  box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.25);
+}
+
+.banner-warn-line {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.banner-warn-line:last-child {
+  margin-bottom: 0;
+}
+
+.add-holding-submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(0.9);
+  box-shadow: none;
+}
+
+.table-caption {
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
 .holdings-panel-head {
   display: flex;
   flex-wrap: wrap;

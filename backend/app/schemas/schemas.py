@@ -64,21 +64,43 @@ class HoldingResponse(BaseModel):
     asset_type: str
     quantity: float
     avg_buy_price: float
-    current_price: float | None
-    total_value: float | None
-    profit_loss: float | None
+    current_price: float | None = Field(
+        default=None,
+        description="Latest snapshot price for the asset, or null if no quote has been stored yet.",
+    )
+    total_value: float | None = Field(
+        default=None,
+        description="quantity × current_price when a price exists; otherwise null.",
+    )
+    profit_loss: float | None = Field(
+        default=None,
+        description="Market value minus cost basis when priced; otherwise null.",
+    )
     updated_at: datetime
 
 
 class PortfolioSummary(BaseModel):
-    total_cost: float
-    total_value: float
-    unrealized_pl: float
-    unrealized_pl_percent: float | None = None
+    total_cost: float = Field(description="Sum of (quantity × avg buy) for all holdings.")
+    total_value: float = Field(
+        description="Sum of market value only for holdings that have at least one stored quote.",
+    )
+    unrealized_pl: float = Field(
+        description="Unrealized P/L summed over priced holdings only (excludes rows with no quote).",
+    )
+    unrealized_pl_percent: float | None = Field(
+        default=None,
+        description="unrealized_pl as a percent of cost basis on priced holdings only; null if that basis is 0.",
+    )
     holdings_count: int
-    unpriced_symbols: list[str] = Field(default_factory=list)
+    unpriced_symbols: list[str] = Field(
+        default_factory=list,
+        description="Symbols in the portfolio with no price snapshot (excluded from total_value and unrealized_pl).",
+    )
 
 
 class PriceRefreshResponse(BaseModel):
-    updated: int
-    failed: list[str]
+    updated: int = Field(description="Number of holdings for which a new quote snapshot was written.")
+    failed: list[str] = Field(
+        default_factory=list,
+        description="Symbols where no quote could be fetched (unchanged in the database).",
+    )

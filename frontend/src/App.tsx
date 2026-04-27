@@ -173,6 +173,31 @@ function App() {
     [symbol, quantityInput, avgBuyInput],
   )
 
+  const addSymbolError = useMemo(() => {
+    const sym = symbol.trim().toUpperCase()
+    if (!symbol.trim()) return null
+    if (!SYMBOL_PATTERN.test(sym)) {
+      return 'Use letters, digits, dots, or hyphens only (e.g. AAPL, BRK.B).'
+    }
+    return null
+  }, [symbol])
+
+  const addQuantityError = useMemo(() => {
+    if (!quantityInput.trim()) return null
+    if (parsePositiveNumber(quantityInput) === null) {
+      return 'Enter a finite number greater than 0.'
+    }
+    return null
+  }, [quantityInput])
+
+  const addAvgError = useMemo(() => {
+    if (!avgBuyInput.trim()) return null
+    if (parsePositiveNumber(avgBuyInput) === null) {
+      return 'Enter a finite number greater than 0.'
+    }
+    return null
+  }, [avgBuyInput])
+
   const editFormValid = useMemo(
     () =>
       parsePositiveNumber(editQtyInput) !== null &&
@@ -347,7 +372,12 @@ function App() {
       }
 
       if (!res.ok) {
-        setError(await readApiErrorMessage(res))
+        const apiMsg = await readApiErrorMessage(res)
+        setError(
+          apiMsg.includes('already hold')
+            ? `Duplicate holding: ${apiMsg}`
+            : apiMsg,
+        )
         return
       }
 
@@ -508,7 +538,7 @@ function App() {
       const { holdingsCount } = await fetchDashboardData(token)
       if (data.failed?.length) {
         setWarnMessage(
-          `No quote returned for: ${data.failed.join(', ')}. Other rows were updated if possible.`,
+          `No quote returned for: ${data.failed.join(', ')}. Those rows stay unpriced until a quote can be saved; other rows were updated if possible.`,
         )
       }
       if (data.updated > 0) {
@@ -518,7 +548,9 @@ function App() {
       } else if (holdingsCount === 0) {
         setInfoMessage('Add a holding first, then refresh prices.')
       } else if (!data.failed?.length) {
-        setInfoMessage('Quotes are up to date.')
+        setInfoMessage('Quotes are up to date (nothing new to save).')
+      } else {
+        setInfoMessage('No new quote snapshots were saved this run.')
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not refresh prices.')
@@ -648,20 +680,24 @@ function App() {
             {infoMessage}
           </p>
         )}
-        {warnMessage && !error && (
-          <p className="banner-warn" role="status">
-            {warnMessage}
-          </p>
-        )}
         {!error &&
-          summary &&
-          summary.unpriced_symbols &&
-          summary.unpriced_symbols.length > 0 && (
-            <p className="banner-warn" role="status">
-              No quote on file for{' '}
-              <strong>{summary.unpriced_symbols.join(', ')}</strong>. Total value and unrealized
-              P/L include only holdings with a saved price; refresh prices after adding symbols.
-            </p>
+          (warnMessage ||
+            (summary &&
+              summary.unpriced_symbols &&
+              summary.unpriced_symbols.length > 0)) && (
+            <div className="banner-warn" role="status">
+              {summary &&
+                summary.unpriced_symbols &&
+                summary.unpriced_symbols.length > 0 && (
+                  <p className="banner-warn-line">
+                    No quote on file for{' '}
+                    <strong>{summary.unpriced_symbols.join(', ')}</strong>. Total value and
+                    unrealized P/L count only holdings with a saved price. Use Refresh prices after
+                    adding symbols; invalid tickers may stay unpriced.
+                  </p>
+                )}
+              {warnMessage && <p className="banner-warn-line">{warnMessage}</p>}
+            </div>
           )}
 
         <section className={`metrics-grid${initialLoading ? ' metrics-loading' : ''}`} aria-busy={initialLoading}>
@@ -718,10 +754,16 @@ function App() {
                   autoComplete="off"
                   aria-label="Symbol"
                   aria-describedby="hint-symbol"
+                  aria-invalid={addSymbolError ? true : undefined}
                 />
                 <span id="hint-symbol" className="input-hint">
                   Use the same symbol you would look up on Yahoo Finance.
                 </span>
+                {addSymbolError && (
+                  <span className="field-error" role="alert">
+                    {addSymbolError}
+                  </span>
+                )}
               </div>
               <div className="field-block">
                 <input
@@ -734,10 +776,16 @@ function App() {
                   placeholder="Quantity (e.g. 10)"
                   aria-label="Quantity"
                   aria-describedby="hint-qty"
+                  aria-invalid={addQuantityError ? true : undefined}
                 />
                 <span id="hint-qty" className="input-hint">
                   Whole or fractional shares; must be &gt; 0.
                 </span>
+                {addQuantityError && (
+                  <span className="field-error" role="alert">
+                    {addQuantityError}
+                  </span>
+                )}
               </div>
               <div className="field-block">
                 <input
@@ -750,14 +798,26 @@ function App() {
                   placeholder="Avg buy price per share (e.g. 150.25)"
                   aria-label="Average buy price"
                   aria-describedby="hint-avg"
+                  aria-invalid={addAvgError ? true : undefined}
                 />
                 <span id="hint-avg" className="input-hint">
                   Your average cost basis per share; must be &gt; 0.
                 </span>
+                {addAvgError && (
+                  <span className="field-error" role="alert">
+                    {addAvgError}
+                  </span>
+                )}
               </div>
               <button
                 type="submit"
+                className="add-holding-submit"
                 disabled={holdingSaving || initialLoading || !addFormValid}
+                title={
+                  !addFormValid
+                    ? 'Enter a valid symbol, quantity, and average buy price to enable Save.'
+                    : undefined
+                }
               >
                 {holdingSaving ? 'Saving…' : 'Save holding'}
               </button>
@@ -822,6 +882,10 @@ function App() {
             <p className="muted">No holdings match your filter.</p>
           ) : (
             <div className="table-wrap">
+              <p className="muted table-caption">
+                An em dash (—) in Current, Value, or P/L means no saved quote yet for that row; try
+                Refresh prices or verify the ticker.
+              </p>
               <table className="holdings-table">
                 <thead>
                   <tr>
