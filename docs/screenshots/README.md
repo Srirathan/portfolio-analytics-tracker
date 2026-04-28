@@ -1,15 +1,19 @@
 # Screenshots for the README
 
-Add PNG or WebP captures from the **live** app here so the root `README.md` image links resolve on GitHub.
+PNG captures from the **live** app live in this folder. The root `README.md` embeds the four files below.
 
-Suggested filenames (match the README section):
+| File | What it shows |
+| --- | --- |
+| `01-auth-register.png` | Create account screen (`Create account` tab). |
+| `02-dashboard-overview.png` | Signed-in dashboard: header, summary metric cards, and top of the page. |
+| `03-holdings-table.png` | Holdings table (filter, rows, actions) as appropriate. |
+| `04-auth-sign-in.png` | Sign-in screen (`Sign in` tab). |
+
+Optional extras for a richer README later (use new numbers so filenames stay unique):
 
 | File | What to capture |
 | --- | --- |
-| `01-auth-register.png` | Register / login screen (`Create account` tab). |
-| `02-dashboard-overview.png` | Signed-in dashboard: header, summary metric cards, and top of the page. |
-| `03-holdings-table.png` | Holdings table with filter visible; include at least one priced row if possible. |
-| `04-allocation-chart.png` | Allocation pie chart with at least two slices. |
-| `05-unpriced-or-refresh.png` | Either the yellow “no quote on file” banner and dashes in the table, or the banner after **Refresh prices** with failed symbols. |
+| `05-allocation-chart.png` | Allocation pie chart with at least two slices. |
+| `06-unpriced-or-refresh.png` | Yellow “no quote on file” banner and dashes, or refresh warning for failed symbols. |
 
-Tips: use a neutral demo account, hide unrelated browser UI if you crop, and avoid real email addresses in screenshots when sharing publicly.
+Tips: use a neutral demo account, crop out unrelated browser chrome if needed, and avoid real email addresses in screenshots when sharing publicly.

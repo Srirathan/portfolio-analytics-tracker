@@ -21,7 +21,21 @@ Production URLs (from the repo GitHub **Website** field and the current Vercel p
 
 ## Screenshots
 
-Capture from the **live** app and commit images under [`docs/screenshots/`](docs/screenshots/). Filenames and framing tips are in [`docs/screenshots/README.md`](docs/screenshots/README.md). After files exist, embed them here with standard Markdown, for example `![Login](docs/screenshots/01-auth-register.png)`.
+### Create Account
+
+![Create account screen](docs/screenshots/01-auth-register.png)
+
+### Dashboard Overview
+
+![Dashboard overview](docs/screenshots/02-dashboard-overview.png)
+
+### Holdings Table
+
+![Holdings table](docs/screenshots/03-holdings-table.png)
+
+### Sign In
+
+![Sign in screen](docs/screenshots/04-auth-sign-in.png)
 
 ## Features
 
