@@ -263,42 +263,31 @@ Planned direction only — not implemented in this MVP.
 
 ### A) Near-term (1–2 weeks)
 
-| Item | Why it matters | Effort | Priority | Resume impact |
-|------|----------------|--------|----------|---------------|
-| Stronger disabled states and inline validation polish on forms | Clearer UX for edge inputs; fewer mistaken submits | S | High | Medium |
-| More consistent error / success / loading banners | Professional feel for demos and screenshots | S | Medium | Medium |
-| Richer copy for unpriced holdings and partial quote failures | Sets expectations without sounding broken | S | Medium | Medium |
-| Targeted pytest for portfolio summary math and rounding | Protects the most business-critical logic | M | High | High |
-| Small auth + holdings API tests (happy path + 401 + duplicate) | Prevents regressions on isolation and JWT | M | High | High |
-| Screenshots in-repo and README gallery | Faster skim for recruiters | S | Medium | High |
-| Manual QA / release checklist in CI or a `CONTRIBUTING` note | Repeatable quality gate | S | Medium | Medium |
-| Strict `ENVIRONMENT=production` checks (CORS, JWT) | Fewer misconfigurations when splitting frontend and API | S | High | Medium |
+| Item | Why it matters | Effort | Priority |
+|------|----------------|--------|----------|
+| Targeted pytest for portfolio summary math and rounding | Protects the most business-critical logic | M | High |
+| Small auth + holdings API tests (happy path + 401 + duplicate) | Prevents regressions on auth and data isolation | M | High |
+| GitHub Actions for frontend build/lint and backend smoke checks | Catches broken deploys before merge | M | High |
+| Strict production env checks for CORS and JWT setup | Prevents common deployment misconfiguration | S | High |
+| Validation and messaging polish for edge inputs | Better UX with fewer mistaken submits | S | Medium |
 
 ### B) Mid-term (2–6 weeks)
 
-| Item | Why it matters | Effort | Priority | Resume impact |
-|------|----------------|--------|----------|---------------|
-| GitHub Actions: `npm run build`, lint, backend install + smoke import | Catches broken deploys before merge | M | High | High |
-| Alembic migrations + Postgres-first workflow | Safe schema iteration | M | High | High |
-| Simple Docker Compose (backend + Postgres, optional frontend) | One-command local parity with production | M | Medium | High |
-| Structured logging (request id, quote failures) | Easier production debugging | M | Medium | Medium |
-| Quote caching / rate-limit handling for `/prices/refresh` | Resilience when Yahoo/Stooq throttle | M | Medium | Medium |
-| Pagination or sorting on the holdings table | Scales past a dozen rows | M | Low | Medium |
-| Portfolio history chart from stored snapshots | Shows momentum beyond a single refresh | L | Low | High |
+| Item | Why it matters | Effort | Priority |
+|------|----------------|--------|----------|
+| Alembic migrations + Postgres-first workflow | Safe schema iteration | M | High |
+| Docker Compose (backend + Postgres) for local parity | Easier onboarding and demos | M | Medium |
+| Structured logging for API and quote refresh failures | Faster production debugging | M | Medium |
+| Quote caching/rate-limit handling for `/prices/refresh` | Better resilience against upstream throttling | M | Medium |
 
 ### C) Long-term (later)
 
-| Item | Why it matters | Effort | Priority | Resume impact |
-|------|----------------|--------|----------|---------------|
-| Transaction history and lot-level cost basis | Accurate realized and unrealized P/L over time | L | Medium | High |
-| CSV import with validation and dry-run | Faster onboarding; more validation surface | L | Low | Medium |
-| Multiple portfolios per user | Household / goal-based views | L | Low | Medium |
-| More asset types (ETFs, funds, crypto) | Broader real-world use | L | Low | Medium |
-| Rule-based portfolio insights (concentration, sector) | Actionable views without ML | L | Medium | High |
-| Optional AI-generated summary, clearly labeled, not financial advice | Narrative layer for demos | L | Low | Medium |
-| Richer analytics dashboard | Depth for power users | L | Low | High |
-| Demo account with seeded sample data | Zero-friction reviewer experience | M | Medium | High |
-| Observability (metrics, tracing) and SLOs | Production maturity story | L | Low | Medium |
+| Item | Why it matters | Effort | Priority |
+|------|----------------|--------|----------|
+| Transaction history and lot-level cost basis | Accurate realized/unrealized performance tracking | L | Medium |
+| CSV import with validation and dry-run | Faster onboarding with controlled risk | L | Low |
+| Multiple portfolios per user | Supports broader real-world workflows | L | Low |
+| Observability (metrics, tracing) and SLOs | Improves long-term production reliability | L | Low |
 
 ---
 
